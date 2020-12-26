@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ContentLoader from "react-content-loader";
 import { Text, Flex, Spinner } from "@chakra-ui/react";
 

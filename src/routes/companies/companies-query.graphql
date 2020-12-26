@@ -1,0 +1,17 @@
+query GetCompanies($limit: Int, $offset: Int) {
+    company(limit: $limit, offset: $offset, order_by: {id: asc}) {
+        id
+        name
+        investments(distinct_on: investor_id) {
+            investor {
+                id
+                name
+            }
+        }
+    }
+    company_aggregate {
+        aggregate {
+            count(distinct: true)
+        }
+    }
+}

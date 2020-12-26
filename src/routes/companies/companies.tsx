@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Heading, Box, Button, Icon, Table, Thead, Tbody, Tr, Th, Td, Avatar, Text, Stack } from "@chakra-ui/react";
+import { Heading, Box, Button, Icon, Table, Thead, Tbody, Tr, Th, Td, Text, Stack } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
 
-import { useGetInvestorsQuery } from "../../generated/graphql";
+import { useGetCompaniesQuery } from "../../generated/graphql";
 import Loader from "../../components/loader";
 import TablePagination from "../../components/table-pagination";
 
-export default function Investors() {
-  const history = useHistory();
+export default function Companies() {
   const [limit, setLimit] = useState<number>(6);
   const [page, setPage] = useState<number>(0);
-  const { data, loading } = useGetInvestorsQuery({
+  const history = useHistory();
+  const { data, loading } = useGetCompaniesQuery({
     variables: {
       limit,
       offset: page * limit,
@@ -30,29 +30,24 @@ export default function Investors() {
     setLimit(row);
   }
 
-  function onInvestorClick(investorId: number) {
-    history.push(`investor/${investorId}`);
+  function onCompanyClick(id: number) {
+    history.push(`/company/${id}`);
   }
 
   if (loading) {
     return <Loader type="table" />;
   }
 
-  function renderInvestor(investor: any) {
+  function renderCompany(company: any) {
     return (
-      <Tr key={investor.id} cursor="pointer" onClick={onInvestorClick.bind(null, investor.id)}>
+      <Tr key={company.id} onClick={onCompanyClick.bind(null, company.id)} cursor="pointer">
         <Td width="20%">
-          <Box display="flex" alignItems="center">
-            <Avatar name={investor.name} src={investor.photo_thumbnail} mr={2} />
-            <Text fontWeight="bold">{investor.name}</Text>
-          </Box>
+          <Text fontWeight="bold">{company.name}</Text>
         </Td>
         <Td width="80%" wordBreak="break-all">
-          <Box>
-            <Text color="#6C6C6C">
-              {investor.investments.map((investment: any) => investment.company.name).join(", ")}
-            </Text>
-          </Box>
+          <Text color="#6C6C6C">
+            {company.investments.map((investment: any) => investment.investor.name).join(", ")}
+          </Text>
         </Td>
       </Tr>
     );
@@ -63,9 +58,9 @@ export default function Investors() {
       <Box pt={4}>
         <Box display="flex" justifyContent="space-between" my={4}>
           <Stack isInline spacing={4}>
-            <Heading>Investors</Heading>
+            <Heading>Companies</Heading>
             <Button variant="outline" colorScheme="blue">
-              Add Investor
+              Add Company
             </Button>
           </Stack>
           <Box>
@@ -80,10 +75,10 @@ export default function Investors() {
                 <Th>Investments</Th>
               </Tr>
             </Thead>
-            <Tbody>{data.investor.map(renderInvestor)}</Tbody>
+            <Tbody>{data.company.map(renderCompany)}</Tbody>
           </Table>
           <TablePagination
-            totalCount={data.investor_aggregate?.aggregate?.count ?? 0}
+            totalCount={data.company_aggregate?.aggregate?.count ?? 0}
             offset={page * limit}
             limit={limit}
             onPreviousPage={onPreviousPage}

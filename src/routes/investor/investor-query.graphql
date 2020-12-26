@@ -1,0 +1,22 @@
+query GetInvestor($id: Int!) {
+    investor_by_pk(id: $id) {
+        id
+        name
+        photo_thumbnail
+        investments {
+            id
+            amount
+            company {
+                id
+                name
+            }
+        }
+        investments_aggregate {
+            aggregate {
+                sum {
+                    amount
+                }
+            }
+        }
+    }
+}

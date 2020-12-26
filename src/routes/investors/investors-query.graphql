@@ -1,14 +1,19 @@
-query GetInvestors {
-    investor {
+query GetInvestors($limit: Int, $offset: Int) {
+    investor(limit: $limit, offset: $offset, order_by: {id: asc}) {
         id
         name
         photo_thumbnail
-        investments {
+        investments(distinct_on: company_id) {
             id
             company {
                 id
                 name
             }
+        }
+    }
+    investor_aggregate {
+        aggregate {
+            count(distinct: true)
         }
     }
 }

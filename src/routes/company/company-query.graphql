@@ -1,0 +1,13 @@
+query GetCompany($id: Int!) {
+    company_by_pk(id: $id) {
+        id
+        name
+        investments {
+            amount
+            investor {
+                id
+                name
+            }
+        }
+    }
+}
