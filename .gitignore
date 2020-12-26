@@ -1,1 +1,3 @@
-db/sampledata.sql
+node_modules
+.idea
+graphql.tsx

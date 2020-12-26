@@ -1,0 +1,24 @@
+overwrite: true
+schema: "https://electric-kangaroo-87.hasura.app/v1/graphql"
+documents: "src/**/*.graphql"
+generates:
+  ./src/generated/graphql.tsx:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      reactApolloVersion: 3
+      apolloReactHooksImportFrom: "@apollo/client"
+      apolloReactCommonImportFrom: "@apollo/client"
+      withComponent: false
+      withHooks: true
+      withHOC: false
+      withResultType: true
+      scalars:
+        DateTime: Date
+        Date: string
+        Time: string
+hooks:
+  afterAllFileWrite:
+    - prettier --write

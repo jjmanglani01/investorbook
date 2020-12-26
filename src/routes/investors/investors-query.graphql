@@ -1,0 +1,14 @@
+query GetInvestors {
+    investor {
+        id
+        name
+        photo_thumbnail
+        investments {
+            id
+            company {
+                id
+                name
+            }
+        }
+    }
+}
