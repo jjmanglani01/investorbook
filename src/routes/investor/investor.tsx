@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { Box, IconButton, Icon, Button, Table, Thead, Tbody, Tr, Th, Td, Text, Stack, Avatar } from "@chakra-ui/react";
 import { MdChevronLeft, MdEdit, MdDelete, MdAdd } from "react-icons/md";
@@ -5,16 +6,18 @@ import { MdChevronLeft, MdEdit, MdDelete, MdAdd } from "react-icons/md";
 import { useGetInvestorQuery } from "../../generated/graphql";
 import Loader from "../../components/loader";
 import { currencyFormatter } from "../../util/formatter";
+import { AddInvestmentModal } from "./add-investment";
 
 export default function Investor() {
   const { id } = useParams<{ id: string }>();
+  const [showAddInvestment, setShowAddInvestment] = useState(false);
   const history = useHistory();
   /*TODO: show error toast or redirect to error page*/
   if (!id) {
     return null;
   }
   const investorId = parseInt(id, 10);
-  const { data, loading } = useGetInvestorQuery({
+  const { data, loading, refetch } = useGetInvestorQuery({
     variables: {
       id: investorId,
     },
@@ -33,7 +36,14 @@ export default function Investor() {
   }
 
   function onAddInvestment() {
-    console.log("Add Investment");
+    setShowAddInvestment(true);
+  }
+
+  async function closeInvestment(shouldRefetch?: boolean) {
+    setShowAddInvestment(false);
+    if (!!shouldRefetch) {
+      await refetch();
+    }
   }
 
   function renderInvestment(investment: any) {
@@ -64,18 +74,15 @@ export default function Investor() {
   if (data) {
     return (
       <Box padding={10}>
+        <AddInvestmentModal investorId={investorId} isOpen={showAddInvestment} onClose={closeInvestment} />
         <Box display="flex" justifyContent="space-between" my={4}>
           <Stack isInline spacing={4} alignItems="center" flex={0}>
             <IconButton aria-label="Go back" onClick={onGoBack} icon={<MdChevronLeft size={40} />} variant="unstyled" />
             <Box display="flex" width="300px" alignItems="center">
-              <Avatar
-                name={data.investor_by_pk?.name ?? undefined}
-                src={data.investor_by_pk?.photo_thumbnail ?? undefined}
-                mr={2}
-              />
+              <Avatar name={data.investor_by_pk?.name ?? ""} src={data.investor_by_pk?.photo_thumbnail ?? ""} mr={2} />
               <Box>
                 <Text fontWeight="bold" fontSize="lg">
-                  {data.investor_by_pk?.name}
+                  {data.investor_by_pk?.name ?? ""}
                 </Text>
                 <Text fontWeight="bold">
                   {currencyFormatter.format(data.investor_by_pk?.investments_aggregate?.aggregate?.sum?.amount ?? 0)}

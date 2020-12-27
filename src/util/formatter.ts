@@ -3,3 +3,5 @@ export const currencyFormatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
   minimumFractionDigits: 2,
 });
+
+export const currencyParser = (val: string) => val.replace(/^\$/, "");

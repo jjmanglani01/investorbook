@@ -1,0 +1,7 @@
+mutation CreateInvestment($input: investment_insert_input!) {
+    insert_investment_one(object: $input) {
+        investor {
+            id
+        }
+    }
+}

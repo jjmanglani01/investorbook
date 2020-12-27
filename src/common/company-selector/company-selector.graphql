@@ -1,0 +1,6 @@
+query CompaniesForSelector($query: String) {
+  company(limit: 20, offset: 0, order_by: {id: asc}, where: {name: {_ilike: $query}}) {
+    id
+    name
+  }
+}
