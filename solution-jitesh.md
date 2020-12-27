@@ -20,3 +20,9 @@
 - Advanced version
 
 [Go to live app](https://investorbook-jitesh.herokuapp.com/)
+
+### Run on local
+
+- Pull latest code
+- yarn install or npm install
+- yarn start-local or npm start-local
